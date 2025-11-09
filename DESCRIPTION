@@ -1,0 +1,26 @@
+Package: POLYspace
+Title: POLYspace reveals domain-specific cellular neighborhoods through
+    topology-aware spatial analysis
+Version: 0.1.0
+Authors@R: 
+    person("Huimin", "Wang", , "huimin.wang@duke.edu", role = c("aut", "cre"))
+Description: Tools to discover and analyze cellular neighborhoods of
+    arbitrary topology accounting for spatial domains.
+License: MIT + file LICENSE
+Depends: 
+    R (>= 4.1.0)
+Imports: 
+    combinat,
+    data.table,
+    igraph,
+    limma,
+    methods,
+    parallel,
+    partitions,
+    RCDT,
+    reshape2,
+    stats,
+    utils
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
