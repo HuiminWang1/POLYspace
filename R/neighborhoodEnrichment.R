@@ -79,13 +79,40 @@ neighborhoodEnrichment = function(POLYspace,
       nei = neighborhoods[[i]][[j]]
       ann = annotations[[i]][[j]]
 
-      if(identical('default',neighborhoods_of_interest)){
+      if (identical("full", neighborhoods_of_interest)) {
+        
         noi = base::sort(unique(ann))
-      }else{
+        
+      } else if (identical("default", neighborhoods_of_interest)) {
+        
+        if (list(ta) %in% c("singlet", "pair")) {
+          
+          noi = base::sort(unique(ann))
+          
+        } else {
+          
+          noijd_frame = lapply(ann, function(x) {
+            y = stringr::str_split(x, delimiter_node)[[1]]
+            sapply(
+              stringr::str_split(y, delimiter_region_celltype),
+              function(z) z[2]
+            )
+          })
+          
+          jd = sapply(noijd_frame, function(x) {
+            length(unique(x)) == length(x)
+          })
+          
+          noi = ann[jd]
+        }
+        
+      } else {
+        
         noi = neighborhoods_of_interest[[j]]
         ann = ann[ann %in% noi]
+        
       }
-
+    
       if(length(noi)>0 & length(nei)>0){
 
         p.adjusted = enrichness = NULL

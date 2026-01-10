@@ -1,0 +1,16 @@
+url: https://HuiminWang1.github.io/POLYspace/
+template:
+  bootstrap: 5
+
+navbar:
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+    - text: "Installation"
+      href: installation.html
+    - text: "Experiments"
+      href: experiments.html
+    - text: "Reference"
+      href: reference/index.html

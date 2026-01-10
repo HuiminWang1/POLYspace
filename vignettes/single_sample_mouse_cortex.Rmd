@@ -1,0 +1,141 @@
+---
+title: "Single-sample analysis of the mouse cortex"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Single-sample analysis of the mouse cortex}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This tutorial provides an example analysis using POLYspace on a single mouse somatosensory cortex seqFISH+ sample from Eng et al., 2019. The complete analysis typically takes approximately 2 minutes to run.
+
+Before running this tutorial, please make sure that the POLYspace package is installed.
+
+
+```{r setup}
+library(POLYspace)
+```
+
+POLYspace supports both single-sample and multi-sample analyses for 2D or 3D spatial data.  
+Input data should be provided as a list of data tables, where each table corresponds to one sample and each row represents a single cell.
+
+Each data table should contain the following columns:
+
+- `id`: unique identifier for each cell  
+- `x`: x-coordinate of the cell  
+- `y`: y-coordinate of the cell  
+- `z` (optional): z-coordinate of the cell; this column can be omitted for 2D data  
+- `celltype`: cell type annotation for each cell  
+- `region` (optional): domain or region annotation for each cell  
+
+If a global analysis without domain information is desired, the `region` column may be omitted.  
+If only part of a tissue section is annotated, regions outside the area of interest can be assigned a dummy label (e.g., `"other"`), which can later be excluded during enrichment analysis.
+
+To support multi-sample analyses and ensure that cells can be unambiguously associated with their corresponding samples, we recommend providing a `sample_id` vector alongside the `samples` list, with a one-to-one correspondence between entries. This allows POLYspace to correctly identify and track individual samples in multi-sample settings. If a `sample_id` vector is not provided, POLYspace will automatically generate sample identifiers numbered from 1 to *n*, where *n* is the number of input samples.
+
+
+The single-slide mouse somatosensory cortex seqFISH+ sample is included in the package and can be loaded directly using:
+```{r}
+data(dataset_cortex)
+str(dataset_cortex)
+```
+The storage contains with two elements:
+
+- `samples`: a list containing a single sample (`sample1`), stored as a `data.table`/`data.frame` with 523 cells (rows) and five variables: `id`, `x`, `y`, `celltype`, and `region`.
+- `sample_id`: a character string specifying the unique identifier of the sample (here, `"sample1"`).
+
+Although this dataset contains only a single sample, a `sample_id` field is still provided to maintain a consistent data structure with multi-sample analyses supported by POLYspace.
+
+```{r}
+samples = dataset_cortex$samples
+sample_id = dataset_cortex$sample_id
+```
+
+### Create a POLYspace object
+
+This step initializes a POLYspace object from the input data. The `samples` argument provides the list of per-sample cell-level data tables, while `id_of_samples` specifies the corresponding sample identifiers.
+
+```{r}
+obj = createPOLYspaceObject(samples = samples,
+                            id_of_samples = sample_id)
+```
+At this point, we have arrived at POLYspace.
+
+### Construct the spatial network
+
+This step constructs the spatial neighborhood graph for each sample in the POLYspace object. Based on the spatial coordinates of cells, `constructSpatialNetwork()` defines local cell–cell adjacency relationships, which serve as the foundation for subsequent neighborhood, topology, and enrichment analyses within the POLYspace framework. 
+
+The following arguments control edge-length filtering and computation:
+
+- `filtering = TRUE`: enables default edge-length filtering when constructing the spatial network.
+- `cutoff = "default"`: applies the default filtering criterion, where the edge-length threshold is computed separately for each sample as *mean + 2 × standard deviation* of all candidate edge lengths. Users may alternatively provide a named numeric vector with one cutoff per sample; the vector names must match `id_of_samples`, allowing custom, hypothesis-driven thresholds.
+- `ncores = 1`: specifies the number of CPU cores used for computation. The function supports parallel processing, where each sample can be assigned to a separate core and processed concurrently.
+
+```{r}
+obj = constructSpatialNetwork(POLYspace = obj)
+```
+
+### Neighborhood mining
+
+This step performs neighborhood mining on the constructed spatial network.
+`neighborhoodMining()` enumerates cellular neighborhood patterns based on the spatial adjacency structure and the user-specified neighborhood topologies.
+
+The `targets` argument specifies the neighborhood patterns to be queried and analyzed.  
+It is provided as a list, where each element defines a different type of target pattern. The default neighborhood topologies include the following:
+
+- `"singlet"`: single-cell neighborhoods, capturing the local context centered on individual cells.
+- `"pair"`: two-cell neighborhoods, representing direct cell–cell interactions.
+- `matrix(c(0, 1, 0,
+            1, 0, 1,
+            0, 1, 0), 3, 3)`: a user-defined higher-order neighborhood pattern encoded as an adjacency matrix, where non-zero entries indicate required spatial adjacency between positions in the pattern.
+
+This flexible specification allows users to analyze simple interactions (singlets and pairs) as well as custom, hypothesis-driven neighborhood topologies.
+
+```{r}
+obj = neighborhoodMining(POLYspace = obj)
+```
+
+
+### Neighborhood annotation
+
+
+This step annotates all neighborhood instances identified during neighborhood mining.  
+`neighborhoodAnnotation()` assigns canonical labels to each neighborhood.
+
+- `region = TRUE`: includes region (domain) information in the neighborhood annotation. If set to `FALSE`, neighborhoods are annotated using cell type information only.
+- `delimiter_node = "--"`: specifies the delimiter used to separate nodes (cells) within a neighborhood label.
+- `delimiter_region_celltype = "_"`: specifies the delimiter used to separate region and cell type within each node label.
+
+```{r}
+obj = neighborhoodAnnotation(POLYspace = obj)
+```
+
+
+### Neighborhood enrichment analysis
+
+This step performs neighborhood enrichment analysis on the annotated neighborhoods.  
+`neighborhoodEnrichment()` evaluates whether specific cellular neighborhood patterns are statistically enriched or depleted compared to a null distribution generated by permutation testing.
+
+
+```{r}
+obj = neighborhoodEnrichment(POLYspace = obj,
+                         neighborhoods_of_interest = 'default',
+                         permutation_times = 1000)
+```
+
+This line shows the top-ranked enriched neighborhood patterns for sample1 by displaying the first few entries of each enrichment result table in `obj@results$enrichment$sample1`.
+
+```{r}
+lapply(obj@results$enrichment$sample1, head)
+```
+
+

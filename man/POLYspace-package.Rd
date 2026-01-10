@@ -8,6 +8,13 @@
 \description{
 Tools to discover and analyze cellular neighborhoods of arbitrary topology accounting for spatial domains.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/HuiminWang1/POLYspace}
+}
+
+}
 \author{
 \strong{Maintainer}: Huimin Wang \email{huimin.wang@duke.edu}
 
