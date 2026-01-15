@@ -1,15 +1,36 @@
-#' Retrieve a neighborhood feature matrix
+#' Retrieve neighborhood feature matrices
 #'
-#' Builds a feature matrix from a \code{POLYspace} object or a list of
-#' \code{POLYspace} objects.
+#' Retrieves neighborhood-level feature matrices and related information from
+#' a \code{POLYspace} object or a list of \code{POLYspace} objects.
 #'
 #' @param object A \code{POLYspace} object or a list of \code{POLYspace} objects.
-#' @param region Logical; use region-level neighborhoods.
-#' @param targets Targets to include.
-#' @param neighborhoods_of_interest Character vector (e.g., \code{c("union","intersect")}),
-#'   or a user-specified set of neighborhoods of interest.
 #'
-#' @return A list containing the feature matrix, neighborhood information, and targets.
+#' @param region Logical; whether to use region-level neighborhoods when
+#'   constructing the feature matrix, which determines the level of enrichment
+#'   analysis to include.
+#'
+#' @param targets Targets to include. \code{"default"} uses the union of targets
+#'   across all input objects.
+#'   
+#' @param neighborhoods_of_interest Neighborhoods to include in the feature matrix.
+#'   This can be specified as:
+#'   \itemize{
+#'     \item \code{"union"}: for each neighborhood shape, use the union of
+#'     neighborhoods observed across all samples;
+#'     \item \code{"intersect"}: for each neighborhood shape, use only neighborhoods
+#'     shared by all samples;
+#'     \item a user-defined list: a list whose elements correspond to targets, where
+#'     each element specifies the neighborhoods of interest for that target.
+#'   }
+#' @return A list containing:
+#'   \itemize{
+#'     \item \code{matrices}: a list of feature matrices, with ordering consistent
+#'     with the targets in the output list. Rows correspond to neighborhoods and
+#'     columns correspond to sample IDs;
+#'     \item \code{neighborhoods_info}: metadata describing the neighborhoods
+#'     included in the matrices, such as regional or cellular composition;
+#'     \item \code{targets}: the targets used for feature matrix retrieval.
+#'   }
 #'
 #' @export
 retrieveFeatureMatrix = function(object,
@@ -91,8 +112,8 @@ retrieveFeatureMatrix = function(object,
     ma = ma[ma$neighborhood %in% noi]
     if(nrow(ma)>0){
 
-      testdt = reshape2::acast(ma[,c('neighborhood','sample_id','enrichness')],
-                               neighborhood~sample_id, value.var = 'enrichness')
+      testdt = reshape2::acast(ma[,c('neighborhood','sample_id','enrichment')],
+                               neighborhood~sample_id, value.var = 'enrichment')
       if(length(setdiff(id_of_samples,colnames(testdt)))>0){
 
         new_col_id = setdiff(id_of_samples,colnames(testdt))

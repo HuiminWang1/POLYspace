@@ -2,7 +2,7 @@
 % Please edit documentation in R/constructSpatialNetwork.R
 \name{constructSpatialNetwork}
 \alias{constructSpatialNetwork}
-\title{Construct a spatial network}
+\title{Construct spatial networks}
 \usage{
 constructSpatialNetwork(
   POLYspace,
@@ -15,15 +15,18 @@ constructSpatialNetwork(
 \arguments{
 \item{POLYspace}{A \code{POLYspace} object.}
 
-\item{filtering}{Logical; if \code{TRUE}, apply edge filtering.}
+\item{filtering}{Logical; if \code{TRUE}, apply edge filtering to remove edges
+longer than the specified \code{cutoff}.}
 
-\item{cutoff}{Either \code{"default"} (per-sample mean(edge length) + 2*sd),
-or a named numeric vector of per-sample thresholds (names = sample IDs),
-used when \code{filtering = TRUE}.}
+\item{cutoff}{Either \code{"default"} (per-sample mean edge length + 2 × SD),
+or a named numeric vector of per-sample thresholds (with names corresponding
+to sample IDs). This parameter is used only when \code{filtering = TRUE}.}
 
-\item{ncores}{Integer number of CPU cores for parallel steps.}
+\item{ncores}{Integer; number of CPU cores used for parallel computation.
+Samples are distributed across cores in a sample-wise manner (one sample per core).}
 
-\item{mc.preschedule}{Logical; passed to \code{parallel::mclapply()}.}
+\item{mc.preschedule}{Logical; passed to \code{parallel::mclapply()} to control
+task scheduling behavior.}
 }
 \value{
 An updated \code{POLYspace} object.

@@ -49,33 +49,41 @@ intermediate objects, and analysis results.</p>
 
 
 <dl><dt><code>samples</code></dt>
-<dd><p><code>list</code>; per-sample tables. Each table typically
-contains columns such as <code>id</code>, <code>x</code>, <code>y</code>,
-<code>celltype</code>, and <code>region</code>.</p></dd>
+<dd><p><code>list</code>; per-sample tables. Each table typically contains
+columns such as <code>id</code>, <code>x</code>, <code>y</code> (and optional <code>z</code> for 3D samples),
+<code>celltype</code>, and <code>region</code> (which may be omitted if a global analysis is performed).</p></dd>
 
 
 <dt><code>nets</code></dt>
-<dd><p><code>list</code>; spatial networks per sample.</p></dd>
+<dd><p><code>list</code>; spatial adjacency networks for each sample.</p></dd>
 
 
 <dt><code>targets</code></dt>
-<dd><p><code>list</code>; target specifications used for mining/enrichment.</p></dd>
+<dd><p><code>list</code>; specifications of neighborhood topologies used as targets
+for neighborhood mining and enrichment analyses.</p></dd>
 
 
 <dt><code>neighborhoods</code></dt>
-<dd><p><code>list</code>; discovered neighborhoods per sample and target.</p></dd>
+<dd><p><code>list</code>; discovered neighborhoods per sample and target.
+Each element of the list corresponds to a sample; within each sample,
+each sub-list element corresponds to a target, with ordering consistent
+with the <code>targets</code> slot.</p></dd>
 
 
 <dt><code>annotations</code></dt>
-<dd><p><code>list</code>; annotations for discovered neighborhoods.</p></dd>
+<dd><p><code>list</code>; canonical labels assigned to discovered neighborhoods.
+Each element of the list corresponds to a sample; within each sample,
+each sub-list element corresponds to a target, with ordering consistent
+with the <code>targets</code> slot.</p></dd>
 
 
 <dt><code>results</code></dt>
-<dd><p><code>list</code>; analysis outputs.</p></dd>
+<dd><p><code>list</code>; analysis outputs, including per-sample enrichment results
+and group-level differential results.</p></dd>
 
 
 <dt><code>parameters</code></dt>
-<dd><p><code>list</code>; run-time parameters and options.</p></dd>
+<dd><p><code>list</code>; run-time parameters and analysis options.</p></dd>
 
 
 </dl></div>

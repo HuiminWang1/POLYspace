@@ -1,15 +1,24 @@
-#' Mine neighborhood
+#' Mine neighborhoods
 #'
 #' Finds specified neighborhoods in a \code{POLYspace} object.
 #'
 #' @param POLYspace A \code{POLYspace} object.
-#' @param targets A list of targets, e.g., \code{"singlet"}, \code{"pair"},
-#'   or an adjacency matrix (numeric/logical) for custom targets.
-#' @param ncores Number of CPU cores to use.
+#'
+#' @param targets A list specifying neighborhood shapes of interest, such as
+#'   \code{"singlet"}, \code{"pair"}, or a custom adjacency matrix.
+#'   By default, targets include singlet, pair, and triple-chain neighborhoods.
+#'
+#' @param ncores Integer; number of CPU cores to use. This is particularly useful
+#'   when targets are more complex than singlet or pair and when multiple samples
+#'   are included in the \code{POLYspace} object. In this case, computations are
+#'   distributed across cores by combinations of samples and targets
+#'
 #' @param mc.preschedule Logical; passed to \code{parallel::mclapply()}.
 #'
 #' @return An updated \code{POLYspace} object whose \code{neighborhoods} slot includes
-#'   the discovered neighborhoods.
+#'   the discovered neighborhoods. Each element of the list corresponds to a sample;
+#'   within each sample, each sub-list element corresponds to a target, with ordering
+#'   consistent with the \code{targets} slot.
 #'
 #' @export
 neighborhoodMining = function(POLYspace,

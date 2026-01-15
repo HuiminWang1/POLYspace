@@ -61,19 +61,25 @@
 
 
 <dt id="arg-region">region<a class="anchor" aria-label="anchor" href="#arg-region"></a></dt>
-<dd><p>Logical; include region-level information.</p></dd>
+<dd><p>Logical; whether to include region-level information when
+performing canonical neighborhood annotation.</p></dd>
 
 
 <dt id="arg-delimiter-node">delimiter_node<a class="anchor" aria-label="anchor" href="#arg-delimiter-node"></a></dt>
-<dd><p>Delimiter between node labels (default <code>"--"</code>).</p></dd>
+<dd><p>Character; delimiter used between node labels during
+annotation (default <code>"--"</code>).</p></dd>
 
 
 <dt id="arg-delimiter-region-celltype">delimiter_region_celltype<a class="anchor" aria-label="anchor" href="#arg-delimiter-region-celltype"></a></dt>
-<dd><p>Delimiter between region and cell type (default <code>"_"</code>).</p></dd>
+<dd><p>Character; delimiter used between region and
+cell type during annotation (default <code>"_"</code>).</p></dd>
 
 
 <dt id="arg-ncores">ncores<a class="anchor" aria-label="anchor" href="#arg-ncores"></a></dt>
-<dd><p>Number of CPU cores to use.</p></dd>
+<dd><p>Integer; number of CPU cores to use. This is particularly useful
+when targets are more complex than singlet and when multiple samples are
+included in the <code>POLYspace</code> object. In this case, computations are
+distributed across cores by combinations of samples and targets.</p></dd>
 
 
 <dt id="arg-mc-preschedule">mc.preschedule<a class="anchor" aria-label="anchor" href="#arg-mc-preschedule"></a></dt>
@@ -82,7 +88,10 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An updated <code>POLYspace</code> object with neighborhood annotations.</p>
+    <p>An updated <code>POLYspace</code> object with neighborhood annotations.
+Each element of the list corresponds to a sample; within each sample,
+each sub-list element corresponds to a target, with ordering consistent
+with the <code>targets</code> slot.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

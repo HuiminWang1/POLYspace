@@ -19,9 +19,9 @@ toCelltypeNeighborhood(
 
 \item{delimiter_region_celltype}{Delimiter between region and cell type (default "_").}
 
-\item{ta}{Target specification used to define neighborhood shape.}
+\item{ta}{Target specification used to define the neighborhood shape.}
 
-\item{ag}{Isomorphism agent to canonicalize label order.}
+\item{ag}{Isomorphism agent to canonicalize neighborhood labels.}
 }
 \value{
 A string of cell-type neighborhood labels.

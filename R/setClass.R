@@ -3,15 +3,29 @@
 #' A container for \code{POLYspace} analyses, storing inputs,
 #' intermediate objects, and analysis results.
 #'
-#' @slot samples      \code{list}; per-sample tables. Each table typically
-#'   contains columns such as \code{id}, \code{x}, \code{y},
-#'   \code{celltype}, and \code{region}.
-#' @slot nets         \code{list}; spatial networks per sample.
-#' @slot targets      \code{list}; target specifications used for mining/enrichment.
+#' @slot samples \code{list}; per-sample tables. Each table typically contains
+#'   columns such as \code{id}, \code{x}, \code{y} (and optional \code{z} for 3D samples),
+#'   \code{celltype}, and \code{region} (which may be omitted if a global analysis is performed).
+#'
+#' @slot nets \code{list}; spatial adjacency networks for each sample.
+#'
+#' @slot targets \code{list}; specifications of neighborhood topologies used as targets
+#'   for neighborhood mining and enrichment analyses.
+#'
 #' @slot neighborhoods \code{list}; discovered neighborhoods per sample and target.
-#' @slot annotations  \code{list}; annotations for discovered neighborhoods.
-#' @slot results      \code{list}; analysis outputs.
-#' @slot parameters   \code{list}; run-time parameters and options.
+#'   Each element of the list corresponds to a sample; within each sample,
+#'   each sub-list element corresponds to a target, with ordering consistent
+#'   with the \code{targets} slot.
+#'
+#' @slot annotations \code{list}; canonical labels assigned to discovered neighborhoods.
+#'   Each element of the list corresponds to a sample; within each sample,
+#'   each sub-list element corresponds to a target, with ordering consistent
+#'   with the \code{targets} slot.
+#'
+#' @slot results \code{list}; analysis outputs, including per-sample enrichment results
+#'   and group-level differential results.
+#'
+#' @slot parameters \code{list}; run-time parameters and analysis options.
 #'
 #' @exportClass POLYspace
 setClass('POLYspace',slots = list(
@@ -26,7 +40,7 @@ setClass('POLYspace',slots = list(
 
 #' Show a welcome message
 #'
-#' Prints a brief welcome/summary for a POLYspace object.
+#' Prints a brief welcome for a POLYspace object.
 #'
 #' @param POLYspace A \code{POLYspace} object.
 #'
@@ -48,11 +62,12 @@ showWelcomeMessage = function(POLYspace)
 #'
 #' Constructs a \code{POLYspace} container from input samples.
 #'
-#' @param samples A list of per-sample tables. Each table contains
-#' #'   columns such as \code{id}, \code{x}, \code{y}, \code{celltype}, and
-#' #'   (optionally) \code{region} if region information is available.
-#' @param id_of_samples Optional character vector of sample IDs; if \code{NULL},
-#'   IDs are generated in order as "1", "2", "3", ...
+#' @param samples A list of per-sample tables. Each table typically contains
+#'   columns such as \code{id}, \code{x}, \code{y} (and optional \code{z}),
+#'   \code{celltype}, and optionally \code{region} if region information is available.
+#'
+#' @param id_of_samples Optional character vector of sample IDs. If \code{NULL},
+#'   sample IDs are automatically generated as \code{"1"}, \code{"2"}, \code{"3"}, \dots
 #' @return A \code{POLYspace} object.
 #'
 #' @export

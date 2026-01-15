@@ -33,8 +33,8 @@ toComposition = function(segments,
 #' @param segments Segment labels.
 #' @param delimiter_node Delimiter between node labels (default "--").
 #' @param delimiter_region_celltype Delimiter between region and cell type (default "_").
-#' @param ta Target specification used to define neighborhood shape.
-#' @param ag Isomorphism agent to canonicalize label order.
+#' @param ta Target specification used to define the neighborhood shape.
+#' @param ag Isomorphism agent to canonicalize neighborhood labels.
 #'
 #' @return A string of cell-type neighborhood labels.
 #'

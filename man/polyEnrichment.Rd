@@ -2,7 +2,7 @@
 % Please edit documentation in R/polyEnrichment.R
 \name{polyEnrichment}
 \alias{polyEnrichment}
-\title{Enrichment analysis across samples}
+\title{Differential neighborhoods across samples}
 \usage{
 polyEnrichment(
   object,
@@ -18,24 +18,47 @@ polyEnrichment(
 \arguments{
 \item{object}{A \code{POLYspace} object or a list of \code{POLYspace} objects.}
 
-\item{region}{Logical; stratify by region.}
+\item{region}{Logical; whether to use region-level neighborhoods when
+constructing the feature matrix, which determines the level of enrichment
+analysis to include.}
 
-\item{targets}{Targets to test.}
+\item{targets}{Targets to include. \code{"default"} uses the union of targets
+across all input objects.}
 
-\item{neighborhoods_of_interest}{Neighborhoods of interest to include in the test.}
+\item{neighborhoods_of_interest}{Neighborhoods to include in the feature matrix.
+This can be specified as:
+\itemize{
+\item \code{"union"}: for each neighborhood shape, use the union of
+neighborhoods observed across all samples;
+\item \code{"intersect"}: for each neighborhood shape, use only neighborhoods
+shared by all samples;
+\item a user-defined list: a list whose elements correspond to targets, where
+each element specifies the neighborhoods of interest for that target.
+}}
 
-\item{des}{Design matrix.}
+\item{des}{Design matrix specifying the experimental design.}
 
 \item{coef}{Coefficient name or index in \code{des} to be tested.}
 
-\item{p_adjust_method}{Method for p-value adjustment (e.g., \code{"fdr"}).}
+\item{p_adjust_method}{Character; method for p-value adjustment
+(e.g., \code{"fdr"}).}
 
-\item{return_object}{Logical; if \code{TRUE}, return the updated object instead of a table.}
+\item{return_object}{Logical; if \code{TRUE}, return the updated
+\code{POLYspace} object instead of a result table.}
 }
 \value{
 If \code{return_object = TRUE}, an updated \code{POLYspace} object with
-enrichment results attached; otherwise a list of enrichment results.
+the differential result listattached; otherwise, a list of differential results.
+
+Within the list, it contains the following components:
+\itemize{
+\item \code{results}: differential neighborhood results, with ordering
+consistent with the \code{targets} list;
+\item \code{targets}: the targets used in the analysis;
+\item \code{des}: the design matrix used for differential testing;
+\item \code{coef}: the coefficient tested in the design matrix.
+}
 }
 \description{
-Tests enrichment of neighborhoods across samples.
+Performs differential enrichment analysis of neighborhoods across samples.
 }

@@ -4,13 +4,28 @@
 #' a list of \code{POLYspace} objects.
 #'
 #' @param object A \code{POLYspace} object or a list of \code{POLYspace} objects.
-#' @param targets Targets to include.
-#' @param neighborhoods_of_interest Character vector (e.g., \code{c("union","intersect")}),
-#'   or a user-specified set of neighborhoods to include.
-#'
-#' @return A list with components \code{results} (data.table of
-#'   single-sample enrichment) and \code{targets} (the targets used).
-#'
+#' 
+#' @param targets Targets to include. \code{"default"} uses the union of targets
+#'   across all input objects.
+#'   
+#' @param neighborhoods_of_interest Neighborhoods to include in the feature matrix.
+#'   This can be specified as:
+#'   \itemize{
+#'     \item \code{"union"}: for each neighborhood shape, use the union of
+#'     neighborhoods observed across all samples;
+#'     \item \code{"intersect"}: for each neighborhood shape, use only neighborhoods
+#'     shared by all samples;
+#'     \item a user-defined list: a list whose elements correspond to targets, where
+#'     each element specifies the neighborhoods of interest for that target.
+#'   }
+#'   
+#' @return A list with components:
+#'   \itemize{
+#'     \item \code{results}: a \code{data.table} containing single-sample
+#'     enrichment results;
+#'     \item \code{targets}: the targets used in the analysis.
+#'   }
+#'   
 #' @export
 retrieveSingleResult = function(object,
                                 targets = 'default',

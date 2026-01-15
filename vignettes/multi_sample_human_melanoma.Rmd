@@ -1,0 +1,167 @@
+---
+title: "Multi-sample analysis of human melanoma data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multi-sample analysis of human melanoma data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This tutorial provides an example using POLYspace on human melanoma data from Hoch et al., 2022 to analyze and compare multiple spatial sequencing samples.
+
+Before running this tutorial, please make sure that the POLYspace package is installed.
+
+
+```{r setup}
+library(POLYspace)
+```
+
+The human melanoma spatial sequencing data used in this tutorial are included in the package and can be loaded directly using:
+```{r}
+data(dataset_melanoma)
+names(dataset_melanoma)
+```
+The storage contains the following elements:
+
+- `samples`: A list containing the required input for each sample, including cellular features and spatial coordinates, which serves as the primary input for downstream analyses.
+
+- `sample_id`: A unique identifier for each spatial sample, used to distinguish different slides in multi-sample analyses.
+
+- `group`: Sample-level grouping information indicating immune infiltration status, used for comparative analyses across conditions.
+
+- `subject_id`: The identifier of the patient from whom each sample was obtained, allowing multiple samples from the same individual to be linked.
+
+- `des`: The experimental design matrix specifying the relationships among samples, groups, and subjects for regression analyses comparing cellular neighborhoods across multiple slides.
+
+- `coef`: The name(s) of the model coefficient(s) defining the contrast(s) of interest in the multi-sample regression analyses.
+
+
+
+```{r}
+samples = dataset_cortex$samples
+sample_id = dataset_cortex$sample_id
+```
+
+### Create a POLYspace object
+
+Because this dataset contains a large number of samples, we recommend not combining all samples into a single POLYspace object. 
+Instead, we suggest constructing one POLYspace object per sample, which allows enrichment analyses to be parallelized across samples. 
+This strategy enables more efficient use of computational resources and substantially improves overall analysis performance.
+Below we illustrate the analysis pipeline for a single sample, from input construction through enrichment analysis, following the same workflow used for the mouse cortex example.
+
+
+```{r, eval = FALSE}
+# Retrieve the task ID from the SLURM array environment variable
+taskID = as.integer(Sys.getenv("SLURM_ARRAY_TASK_ID"))
+
+# Create a POLYspace object for a single sample specified by the task ID
+obj = createPOLYspaceObject(
+  samples = samples[taskID],
+  id_of_samples = sample_id[taskID]
+)
+
+# Construct the spatial cell–cell neighboring network
+obj = constructSpatialNetwork(POLYspace = obj)
+
+# Identify spatial neighborhoods based on the constructed network
+obj = neighborhoodMining(POLYspace = obj)
+
+# Annotate the neighborhoods
+obj = neighborhoodAnnotation(POLYspace = obj)
+```
+
+After neighborhood annotation, we construct a consistent set of neighborhoods of interest across samples by taking the union of neighborhoods for each target.  
+This ensures that the same set of neighborhoods is considered for all samples.  
+The union is obtained using the following code, where \code{files} is a list of all annotated \code{POLYspace} objects.
+```{r, eval = FALSE}
+targets = files[[1]]@targets
+
+neighborhoods_of_interest = lapply(targets, function(to){
+  unlist(sapply(files,function(ob){
+    ob@annotations[[1]][match(list(to),ob@targets)]
+  }))
+
+})
+neighborhoods_of_interest = lapply(neighborhoods_of_interest,function(x) base::sort(unique(x)))
+neighborhoods_of_interest = lapply(neighborhoods_of_interest,function(x) {
+  x[!grepl("other", x)]
+})
+
+for(i in 1:length(targets)){
+  if(!(identical(targets[[i]],'singlet')|identical(targets[[i]],'pair'))){
+    vec = neighborhoods_of_interest[[i]]
+    if(!is.null(vec)){
+      jd_frame = lapply(vec, function(x){
+      y = stringr::str_split(x,'--')[[1]]
+      sapply(stringr::str_split(y,'_'), function(z) z[2])
+      })
+    
+    
+      jd = sapply(jd_frame, function(x) {
+        
+        length(unique(x)) == length(x)
+        
+      })
+      
+      neighborhoods_of_interest[[i]] = vec[jd]
+
+
+    }
+    
+
+  }
+}
+```
+
+
+```{r, eval = FALSE}
+# Perform neighborhood enrichment analysis using permutation testing
+obj = neighborhoodEnrichment(POLYspace = obj,
+                             neighborhoods_of_interest = neighborhoods_of_interest,
+                             permutation_times = 1000,
+                             ncores = 50)
+```
+
+After enrichment analysis has been completed for all samples, the resulting \code{POLYspace} objects are collected into a list, denoted here as \code{files}.  
+This list is then used as input to identify differential neighborhoods associated with immune infiltration status, while controlling for subject information.
+
+
+```{r, eval = FALSE}
+# Extract the design matrix for comparing immune-hot versus immune-cold samples
+des = dataset_melanoma[["des"]][["hot_vs_cold"]]
+
+# Extract the coefficient specifying the contrast of interest (hot vs. cold)
+coef = dataset_melanoma[["coef"]][["hot_vs_cold"]]
+
+# Perform joint enrichment analysis to identify differential neighborhoods
+# associated with immune infiltration status while controlling for subject effects
+res = polyEnrichment(
+  object = files,
+  neighborhoods_of_interest = "union",
+  des = des,
+  coef = coef
+)
+
+
+```
+
+The parameter `neighborhoods_of_interest` specifies which set of neighborhoods is included in the joint analysis across samples. 
+Because each sample may contain a different set of neighborhood topologies, this parameter controls how neighborhoods are aligned across samples.
+
+- `"union"`: Uses the union of all neighborhood types observed across samples. 
+  This option includes any neighborhood that appears in at least one sample and is useful when neighborhood composition varies substantially across samples.
+
+- `"intersect"`: Uses only the neighborhoods that are shared by all samples. 
+  This option restricts the analysis to common neighborhood types and may be preferable when focusing on highly consistent spatial patterns.
+
+
+

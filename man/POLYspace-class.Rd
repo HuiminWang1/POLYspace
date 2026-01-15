@@ -11,20 +11,28 @@ intermediate objects, and analysis results.
 \section{Slots}{
 
 \describe{
-\item{\code{samples}}{\code{list}; per-sample tables. Each table typically
-contains columns such as \code{id}, \code{x}, \code{y},
-\code{celltype}, and \code{region}.}
+\item{\code{samples}}{\code{list}; per-sample tables. Each table typically contains
+columns such as \code{id}, \code{x}, \code{y} (and optional \code{z} for 3D samples),
+\code{celltype}, and \code{region} (which may be omitted if a global analysis is performed).}
 
-\item{\code{nets}}{\code{list}; spatial networks per sample.}
+\item{\code{nets}}{\code{list}; spatial adjacency networks for each sample.}
 
-\item{\code{targets}}{\code{list}; target specifications used for mining/enrichment.}
+\item{\code{targets}}{\code{list}; specifications of neighborhood topologies used as targets
+for neighborhood mining and enrichment analyses.}
 
-\item{\code{neighborhoods}}{\code{list}; discovered neighborhoods per sample and target.}
+\item{\code{neighborhoods}}{\code{list}; discovered neighborhoods per sample and target.
+Each element of the list corresponds to a sample; within each sample,
+each sub-list element corresponds to a target, with ordering consistent
+with the \code{targets} slot.}
 
-\item{\code{annotations}}{\code{list}; annotations for discovered neighborhoods.}
+\item{\code{annotations}}{\code{list}; canonical labels assigned to discovered neighborhoods.
+Each element of the list corresponds to a sample; within each sample,
+each sub-list element corresponds to a target, with ordering consistent
+with the \code{targets} slot.}
 
-\item{\code{results}}{\code{list}; analysis outputs.}
+\item{\code{results}}{\code{list}; analysis outputs, including per-sample enrichment results
+and group-level differential results.}
 
-\item{\code{parameters}}{\code{list}; run-time parameters and options.}
+\item{\code{parameters}}{\code{list}; run-time parameters and analysis options.}
 }}
 

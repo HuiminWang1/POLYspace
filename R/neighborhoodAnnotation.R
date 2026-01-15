@@ -3,13 +3,27 @@
 #' Adds annotations to neighborhoods in a \code{POLYspace} object.
 #'
 #' @param POLYspace A \code{POLYspace} object.
-#' @param region Logical; include region-level information.
-#' @param delimiter_node Delimiter between node labels (default \code{"--"}).
-#' @param delimiter_region_celltype Delimiter between region and cell type (default \code{"_"}).
-#' @param ncores Number of CPU cores to use.
+#'
+#' @param region Logical; whether to include region-level information when
+#'   performing canonical neighborhood annotation.
+#'
+#' @param delimiter_node Character; delimiter used between node labels during
+#'   annotation (default \code{"--"}).
+#'
+#' @param delimiter_region_celltype Character; delimiter used between region and
+#'   cell type during annotation (default \code{"_"}).
+#'
+#' @param ncores Integer; number of CPU cores to use. This is particularly useful
+#'   when targets are more complex than singlet and when multiple samples are
+#'   included in the \code{POLYspace} object. In this case, computations are
+#'   distributed across cores by combinations of samples and targets.
+#'
 #' @param mc.preschedule Logical; passed to \code{parallel::mclapply()}.
 #'
 #' @return An updated \code{POLYspace} object with neighborhood annotations.
+#'   Each element of the list corresponds to a sample; within each sample,
+#'   each sub-list element corresponds to a target, with ordering consistent
+#'   with the \code{targets} slot.
 #'
 #' @export
 neighborhoodAnnotation = function(POLYspace,

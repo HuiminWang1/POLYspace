@@ -13,5 +13,5 @@ showWelcomeMessage(POLYspace)
 No return value, called for side effects.
 }
 \description{
-Prints a brief welcome/summary for a POLYspace object.
+Prints a brief welcome for a POLYspace object.
 }

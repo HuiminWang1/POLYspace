@@ -1,14 +1,21 @@
-#' Construct a spatial network
+#' Construct spatial networks
 #'
 #' Builds the spatial networks for a \code{POLYspace} object.
 #'
 #' @param POLYspace A \code{POLYspace} object.
-#' @param filtering Logical; if \code{TRUE}, apply edge filtering.
-#' @param cutoff Either \code{"default"} (per-sample mean(edge length) + 2*sd),
-#' or a named numeric vector of per-sample thresholds (names = sample IDs),
-#' used when \code{filtering = TRUE}.
-#' @param ncores Integer number of CPU cores for parallel steps.
-#' @param mc.preschedule Logical; passed to \code{parallel::mclapply()}.
+#'
+#' @param filtering Logical; if \code{TRUE}, apply edge filtering to remove edges
+#'   longer than the specified \code{cutoff}.
+#'
+#' @param cutoff Either \code{"default"} (per-sample mean edge length + 2 × SD),
+#'   or a named numeric vector of per-sample thresholds (with names corresponding
+#'   to sample IDs). This parameter is used only when \code{filtering = TRUE}.
+#'
+#' @param ncores Integer; number of CPU cores used for parallel computation.
+#'   Samples are distributed across cores in a sample-wise manner (one sample per core).
+#'
+#' @param mc.preschedule Logical; passed to \code{parallel::mclapply()} to control
+#'   task scheduling behavior.
 #'
 #' @return An updated \code{POLYspace} object.
 #'

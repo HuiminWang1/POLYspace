@@ -1,21 +1,78 @@
 #' Neighborhood enrichment analysis
 #'
-#' Performs enrichment analysis of neighborhoods.
+#' Performs enrichment analysis of the neighborhoods.
 #'
 #' @param POLYspace A \code{POLYspace} object.
-#' @param region Logical; include region-level stratification.
-#' @param delimiter_node Delimiter between node labels (default \code{"--"}).
-#' @param delimiter_region_celltype Delimiter between region and cell type (default \code{"_"}).
-#' @param neighborhoods_of_interest Character vector of neighborhoods of interest or \code{"default"}.
-#' @param permutation_times Integer; number of permutations (default \code{100}).
-#' @param p_adjust_method Method for p-value adjustment (e.g., \code{"fdr"}).
-#' @param ncores Number of CPU cores.
-#' @param mc.preschedule Logical; passed to \code{parallel::mclapply()}.
-#' @param set_seed Logical; if \code{TRUE}, set the RNG seed to \code{seed}.
-#' @param seed Integer RNG seed.
 #'
-#' @return An updated \code{POLYspace} object whose \code{results} slot includes
-#'   tables of enrichment statistics.
+#' @param region Logical; whether to include region-level information when
+#'   performing canonical neighborhood annotation. This option is effective
+#'   only if region information was included in the previous annotation step.
+#'
+#' @param delimiter_node Character; delimiter used between node labels during
+#'   annotation (default \code{"--"}).
+#'
+#' @param delimiter_region_celltype Character; delimiter used between region and
+#'   cell type during annotation (default \code{"_"}).
+#'
+#' @param neighborhoods_of_interest Neighborhoods to be tested for enrichment.
+#'   This can be specified as:
+#'   \itemize{
+#'     \item \code{"default"}: for complex neighborhood shapes (beyond pairs),
+#'     only neighborhoods with all distinct node types are considered;
+#'     \item \code{"full"}: all neighborhood types detected in each sample are included;
+#'     \item a user-defined list: a list whose elements correspond to targets,
+#'     where each element specifies the neighborhoods of interest for that target.
+#'   }
+#'
+#' @param permutation_times Integer; number of permutations used for enrichment
+#'   analysis (default \code{100}).
+#'
+#' @param p_adjust_method Character; method used for multiple testing correction
+#'   in permutation-based tests (e.g., \code{"fdr"}).
+#'
+#' @param ncores Integer; number of CPU cores to use. This is primarily used for
+#'   permutation-based enrichment, where computations are distributed across
+#'   combinations of samples and targets, with each permutation assigned to a core.
+#'
+#' @param mc.preschedule Logical; passed to \code{parallel::mclapply()}.
+#'
+#' @param set_seed Logical; if \code{TRUE}, set the random number generator seed
+#'   to \code{seed} for reproducibility.
+#'
+#' @param seed Integer; random number generator seed.
+#'
+#' @return An updated \code{POLYspace} object whose \code{results} slot contains
+#'   enrichment statistics.
+#'
+#'   The \code{results} slot is a list in which each element corresponds to a
+#'   sample, and each sub-element corresponds to a target neighborhood shape.
+#'   Each sub-element is a \code{data.table} summarizing enrichment results.
+#'
+#'   When \code{region = TRUE}, the result table includes the following columns:
+#'   \itemize{
+#'     \item \code{pvalue}: permutation-based p-value;
+#'     \item \code{p.adjusted}: multiple-testing adjusted p-value;
+#'     \item \code{enrichment}: enrichment score (z-score);
+#'     \item \code{neighborhood}: canonical neighborhood identifier including region information;
+#'     \item \code{celltype}: neighborhood identifier excluding region information;
+#'     \item \code{region}: neighborhood region composition;
+#'     \item \code{composition}: neighborhood cellular composition;
+#'     \item \code{target}: numeric target neighborhood ID corresponding to the
+#'       position of the target in the \code{targets} slot;
+#'     \item \code{sample_id}: sample identifier.
+#'   }
+#'
+#'   When \code{region = FALSE}, the result table includes:
+#'   \itemize{
+#'     \item \code{pvalue}: permutation-based p-value;
+#'     \item \code{p.adjusted}: multiple-testing adjusted p-value;
+#'     \item \code{enrichment}: enrichment score (z-score);
+#'     \item \code{neighborhood}: neighborhood identifier;
+#'     \item \code{composition}: neighborhood cellular composition;
+#'     \item \code{target}: numeric target neighborhood ID corresponding to the
+#'       position of the target in the \code{targets} slot;
+#'     \item \code{sample_id}: sample identifier.
+#'   }
 #'
 #' @export
 neighborhoodEnrichment = function(POLYspace,
@@ -115,7 +172,7 @@ neighborhoodEnrichment = function(POLYspace,
     
       if(length(noi)>0 & length(nei)>0){
 
-        p.adjusted = enrichness = NULL
+        p.adjusted = enrichment = NULL
 
         ob = countAnnotation(neighborhoods_of_interest = noi,
                              annotation = ann)
@@ -189,7 +246,7 @@ neighborhoodEnrichment = function(POLYspace,
 
           res = data.table::data.table(pvalue = pvalue,
                                        p.adjusted = p.adjusted,
-                                       enrichness = zscore,
+                                       enrichment = zscore,
                                        neighborhood = noi,
                                        celltype = noi_no_region,
                                        region = noi_region,
@@ -200,14 +257,14 @@ neighborhoodEnrichment = function(POLYspace,
 
           res = data.table::data.table(pvalue = pvalue,
                                        p.adjusted = p.adjusted,
-                                       enrichness = zscore,
+                                       enrichment = zscore,
                                        neighborhood = noi,
                                        composition = noi_comp,
                                        target = j,
                                        sample_id = i)
         }
         res = na.omit(res)
-        data.table::setorder(res,p.adjusted,-enrichness)
+        data.table::setorder(res,p.adjusted,-enrichment)
         return(res)
 
       }

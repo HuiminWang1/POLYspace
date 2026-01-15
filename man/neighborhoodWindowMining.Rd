@@ -17,22 +17,33 @@ neighborhoodWindowMining(
 \arguments{
 \item{POLYspace}{A \code{POLYspace} object.}
 
-\item{targets}{List of targets to search.}
+\item{targets}{A list specifying neighborhood shapes of interest, such as
+\code{"singlet"}, \code{"pair"}, or a custom adjacency matrix.
+By default, targets include singlet, pair, and triple-chain neighborhoods.}
 
-\item{window_size}{Numeric side length, or \code{"auto"} to infer from density.}
+\item{window_size}{Numeric; side length of the square window, or \code{"auto"}
+to infer the window size based on cell density.}
 
-\item{window_mean_points}{Target mean points per window when \code{window_size = "auto"}.}
+\item{window_mean_points}{Numeric; target mean number of cells per window when
+\code{window_size = "auto"} is used to infer the window size.}
 
-\item{epsilon}{Tolerance used for auto window size.}
+\item{epsilon}{Numeric; tolerance parameter used for automatic window size
+inference.}
 
-\item{ncores}{Number of CPU cores.}
+\item{ncores}{Integer; number of CPU cores to use. This is particularly useful
+when targets are more complex than singlet or pair and when multiple samples
+are included in the \code{POLYspace} object. In this case, computations are
+distributed across cores by combinations of samples, targets, and windows.}
 
 \item{mc.preschedule}{Logical; passed to \code{parallel::mclapply()}.}
 }
 \value{
-An updated \code{POLYspace} object whose \code{neighborhoods} slot includes
-windowed target discoveries.
+An updated \code{POLYspace} object whose \code{neighborhoods} slot
+includes windowed target discoveries. Each element of the list corresponds
+to a sample; within each sample, each sub-list element corresponds to a
+target, with ordering consistent with the \code{targets} slot.
 }
 \description{
-Mines specified neighborhood targets in sliding windows over a \code{POLYspace} object.
+Mines specified neighborhood targets using sliding windows over a
+\code{POLYspace} object containing slides with large numbers of cells.
 }

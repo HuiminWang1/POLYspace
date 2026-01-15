@@ -2,7 +2,7 @@
 % Please edit documentation in R/neighborhoodMining.R
 \name{neighborhoodMining}
 \alias{neighborhoodMining}
-\title{Mine neighborhood}
+\title{Mine neighborhoods}
 \usage{
 neighborhoodMining(
   POLYspace,
@@ -14,16 +14,22 @@ neighborhoodMining(
 \arguments{
 \item{POLYspace}{A \code{POLYspace} object.}
 
-\item{targets}{A list of targets, e.g., \code{"singlet"}, \code{"pair"},
-or an adjacency matrix (numeric/logical) for custom targets.}
+\item{targets}{A list specifying neighborhood shapes of interest, such as
+\code{"singlet"}, \code{"pair"}, or a custom adjacency matrix.
+By default, targets include singlet, pair, and triple-chain neighborhoods.}
 
-\item{ncores}{Number of CPU cores to use.}
+\item{ncores}{Integer; number of CPU cores to use. This is particularly useful
+when targets are more complex than singlet or pair and when multiple samples
+are included in the \code{POLYspace} object. In this case, computations are
+distributed across cores by combinations of samples and targets}
 
 \item{mc.preschedule}{Logical; passed to \code{parallel::mclapply()}.}
 }
 \value{
 An updated \code{POLYspace} object whose \code{neighborhoods} slot includes
-the discovered neighborhoods.
+the discovered neighborhoods. Each element of the list corresponds to a sample;
+within each sample, each sub-list element corresponds to a target, with ordering
+consistent with the \code{targets} slot.
 }
 \description{
 Finds specified neighborhoods in a \code{POLYspace} object.

@@ -16,18 +16,27 @@ neighborhoodAnnotation(
 \arguments{
 \item{POLYspace}{A \code{POLYspace} object.}
 
-\item{region}{Logical; include region-level information.}
+\item{region}{Logical; whether to include region-level information when
+performing canonical neighborhood annotation.}
 
-\item{delimiter_node}{Delimiter between node labels (default \code{"--"}).}
+\item{delimiter_node}{Character; delimiter used between node labels during
+annotation (default \code{"--"}).}
 
-\item{delimiter_region_celltype}{Delimiter between region and cell type (default \code{"_"}).}
+\item{delimiter_region_celltype}{Character; delimiter used between region and
+cell type during annotation (default \code{"_"}).}
 
-\item{ncores}{Number of CPU cores to use.}
+\item{ncores}{Integer; number of CPU cores to use. This is particularly useful
+when targets are more complex than singlet and when multiple samples are
+included in the \code{POLYspace} object. In this case, computations are
+distributed across cores by combinations of samples and targets.}
 
 \item{mc.preschedule}{Logical; passed to \code{parallel::mclapply()}.}
 }
 \value{
 An updated \code{POLYspace} object with neighborhood annotations.
+Each element of the list corresponds to a sample; within each sample,
+each sub-list element corresponds to a target, with ordering consistent
+with the \code{targets} slot.
 }
 \description{
 Adds annotations to neighborhoods in a \code{POLYspace} object.

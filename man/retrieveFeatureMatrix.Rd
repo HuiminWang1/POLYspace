@@ -2,7 +2,7 @@
 % Please edit documentation in R/retrieveFeatureMatrix.R
 \name{retrieveFeatureMatrix}
 \alias{retrieveFeatureMatrix}
-\title{Retrieve a neighborhood feature matrix}
+\title{Retrieve neighborhood feature matrices}
 \usage{
 retrieveFeatureMatrix(
   object,
@@ -14,17 +14,36 @@ retrieveFeatureMatrix(
 \arguments{
 \item{object}{A \code{POLYspace} object or a list of \code{POLYspace} objects.}
 
-\item{region}{Logical; use region-level neighborhoods.}
+\item{region}{Logical; whether to use region-level neighborhoods when
+constructing the feature matrix, which determines the level of enrichment
+analysis to include.}
 
-\item{targets}{Targets to include.}
+\item{targets}{Targets to include. \code{"default"} uses the union of targets
+across all input objects.}
 
-\item{neighborhoods_of_interest}{Character vector (e.g., \code{c("union","intersect")}),
-or a user-specified set of neighborhoods of interest.}
+\item{neighborhoods_of_interest}{Neighborhoods to include in the feature matrix.
+This can be specified as:
+\itemize{
+\item \code{"union"}: for each neighborhood shape, use the union of
+neighborhoods observed across all samples;
+\item \code{"intersect"}: for each neighborhood shape, use only neighborhoods
+shared by all samples;
+\item a user-defined list: a list whose elements correspond to targets, where
+each element specifies the neighborhoods of interest for that target.
+}}
 }
 \value{
-A list containing the feature matrix, neighborhood information, and targets.
+A list containing:
+\itemize{
+\item \code{matrices}: a list of feature matrices, with ordering consistent
+with the targets in the output list. Rows correspond to neighborhoods and
+columns correspond to sample IDs;
+\item \code{neighborhoods_info}: metadata describing the neighborhoods
+included in the matrices, such as regional or cellular composition;
+\item \code{targets}: the targets used for feature matrix retrieval.
+}
 }
 \description{
-Builds a feature matrix from a \code{POLYspace} object or a list of
-\code{POLYspace} objects.
+Retrieves neighborhood-level feature matrices and related information from
+a \code{POLYspace} object or a list of \code{POLYspace} objects.
 }

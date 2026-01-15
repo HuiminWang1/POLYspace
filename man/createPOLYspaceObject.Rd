@@ -7,12 +7,12 @@
 createPOLYspaceObject(samples, id_of_samples = NULL)
 }
 \arguments{
-\item{samples}{A list of per-sample tables. Each table contains
-#'   columns such as \code{id}, \code{x}, \code{y}, \code{celltype}, and
-#'   (optionally) \code{region} if region information is available.}
+\item{samples}{A list of per-sample tables. Each table typically contains
+columns such as \code{id}, \code{x}, \code{y} (and optional \code{z}),
+\code{celltype}, and optionally \code{region} if region information is available.}
 
-\item{id_of_samples}{Optional character vector of sample IDs; if \code{NULL},
-IDs are generated in order as "1", "2", "3", ...}
+\item{id_of_samples}{Optional character vector of sample IDs. If \code{NULL},
+sample IDs are automatically generated as \code{"1"}, \code{"2"}, \code{"3"}, \dots}
 }
 \value{
 A \code{POLYspace} object.

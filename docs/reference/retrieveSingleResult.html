@@ -61,19 +61,27 @@ a list of <code>POLYspace</code> objects.</p>
 
 
 <dt id="arg-targets">targets<a class="anchor" aria-label="anchor" href="#arg-targets"></a></dt>
-<dd><p>Targets to include.</p></dd>
+<dd><p>Targets to include. <code>"default"</code> uses the union of targets
+across all input objects.</p></dd>
 
 
 <dt id="arg-neighborhoods-of-interest">neighborhoods_of_interest<a class="anchor" aria-label="anchor" href="#arg-neighborhoods-of-interest"></a></dt>
-<dd><p>Character vector (e.g., <code>c("union","intersect")</code>),
-or a user-specified set of neighborhoods to include.</p></dd>
+<dd><p>Neighborhoods to include in the feature matrix.
+This can be specified as:</p><ul><li><p><code>"union"</code>: for each neighborhood shape, use the union of
+neighborhoods observed across all samples;</p></li>
+<li><p><code>"intersect"</code>: for each neighborhood shape, use only neighborhoods
+shared by all samples;</p></li>
+<li><p>a user-defined list: a list whose elements correspond to targets, where
+each element specifies the neighborhoods of interest for that target.</p></li>
+</ul></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with components <code>results</code> (data.table of
-single-sample enrichment) and <code>targets</code> (the targets used).</p>
-    </div>
+    <p>A list with components:</p><ul><li><p><code>results</code>: a <code>data.table</code> containing single-sample
+enrichment results;</p></li>
+<li><p><code>targets</code>: the targets used in the analysis.</p></li>
+</ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -89,18 +89,35 @@ generateWindows = function(sa,
 
 #' Windowed neighborhood mining
 #'
-#' Mines specified neighborhood targets in sliding windows over a \code{POLYspace} object.
+#' Mines specified neighborhood targets using sliding windows over a
+#' \code{POLYspace} object containing slides with large numbers of cells.
 #'
 #' @param POLYspace A \code{POLYspace} object.
-#' @param targets List of targets to search.
-#' @param window_size Numeric side length, or \code{"auto"} to infer from density.
-#' @param window_mean_points Target mean points per window when \code{window_size = "auto"}.
-#' @param epsilon Tolerance used for auto window size.
-#' @param ncores Number of CPU cores.
+#'
+#' @param targets A list specifying neighborhood shapes of interest, such as
+#'   \code{"singlet"}, \code{"pair"}, or a custom adjacency matrix.
+#'   By default, targets include singlet, pair, and triple-chain neighborhoods.
+#'
+#' @param window_size Numeric; side length of the square window, or \code{"auto"}
+#'   to infer the window size based on cell density.
+#'
+#' @param window_mean_points Numeric; target mean number of cells per window when
+#'   \code{window_size = "auto"} is used to infer the window size.
+#'
+#' @param epsilon Numeric; tolerance parameter used for automatic window size
+#'   inference.
+#'
+#' @param ncores Integer; number of CPU cores to use. This is particularly useful
+#'   when targets are more complex than singlet or pair and when multiple samples
+#'   are included in the \code{POLYspace} object. In this case, computations are
+#'   distributed across cores by combinations of samples, targets, and windows.
+#'
 #' @param mc.preschedule Logical; passed to \code{parallel::mclapply()}.
 #'
-#' @return An updated \code{POLYspace} object whose \code{neighborhoods} slot includes
-#'   windowed target discoveries.
+#' @return An updated \code{POLYspace} object whose \code{neighborhoods} slot
+#'   includes windowed target discoveries. Each element of the list corresponds
+#'   to a sample; within each sample, each sub-list element corresponds to a
+#'   target, with ordering consistent with the \code{targets} slot.
 #'
 #' @export
 neighborhoodWindowMining = function(POLYspace,
