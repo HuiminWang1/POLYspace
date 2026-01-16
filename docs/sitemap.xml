@@ -6,6 +6,7 @@
 <url><loc>https://HuiminWang1.github.io/POLYspace/articles/index.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/articles/multi_sample_human_melanoma.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/articles/single_sample_mouse_cortex.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/articles/visualize_cell_neighborhood_glyphs.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/authors.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/experiments.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/index.html</loc></url>
@@ -13,11 +14,19 @@
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/POLYspace-class.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/POLYspace-package.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/autoWindowSize.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/reference/cellNeighborhoodGlyph.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/constructSpatialNetwork.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/countAnnotation.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/createPOLYspaceObject.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/reference/dataset_cortex.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/reference/dataset_diabetes.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/reference/dataset_melanoma.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/findUniqueComposition.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/reference/generateArcData.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/reference/generateEdgeData.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/generateIsomorphismAgent.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/reference/generateNodePosition.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/reference/generateNodedata.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/generateWindows.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/index.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/isomorphismMapping.html</loc></url>
@@ -31,5 +40,6 @@
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/showWelcomeMessage.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/toCelltypeNeighborhood.html</loc></url>
 <url><loc>https://HuiminWang1.github.io/POLYspace/reference/toComposition.html</loc></url>
+<url><loc>https://HuiminWang1.github.io/POLYspace/visualizations.html</loc></url>
 </urlset>
 

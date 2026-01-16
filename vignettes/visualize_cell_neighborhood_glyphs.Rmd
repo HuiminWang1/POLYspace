@@ -1,0 +1,127 @@
+---
+title: "Visualize cell neighborhood glyphs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualize cell neighborhood glyphs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This tutorial provides examples for visualizing cell neighborhood glyphs.
+Before running this tutorial, please make sure that the POLYspace package is installed.
+
+
+```{r setup}
+library(POLYspace)
+library(patchwork)
+
+```
+
+Visualization of cell neighborhood glyphs without explicit region information:
+```{r}
+string_list = c('CD8+ T cell','CD8+ T cell--Tumor','CD8+ T cell--pDC--Tumor')
+adjmat_list = list('singlet',
+                   'pair',
+                   matrix(c(0,1,0,1,0,1,0,1,0),3,3))
+celltype_color_plate = c(
+  "CD8+ T cell" = 'black',
+  "Tumor"       = 'black',
+  "pDC"         = 'black'
+)
+pl_list = lapply(1:length(string_list),function(x){
+  
+  pl = cellNeighborhoodGlyph(string = string_list[x],
+                             adjmat = adjmat_list[[x]],
+                             celltype_color_plate = celltype_color_plate,
+                             node_scale = list(c(0.4,0.2),
+                                               c(0.2,0.2)),
+                             xlims = c(-0.8,0.8),
+                             ylims = c(-1,1))
+  
+})
+
+
+combined = wrap_plots(pl_list, nrow = 1)
+combined
+```
+
+
+
+With color:
+```{r}
+string_list = c('CD8+ T cell','CD8+ T cell--Tumor','CD8+ T cell--pDC--Tumor')
+adjmat_list = list('singlet',
+                   'pair',
+                   matrix(c(0,1,0,1,0,1,0,1,0),3,3))
+celltype_color_plate = c(
+  "CD8+ T cell" = "#F03C3C",
+  "pDC"         = "#9F7FDB",
+  "Tumor"       = "#5F6FD0"
+)
+pl_list = lapply(1:length(string_list),function(x){
+  
+  pl = cellNeighborhoodGlyph(string = string_list[x],
+                             adjmat = adjmat_list[[x]],
+                             celltype_color_plate = celltype_color_plate,
+                             node_scale = list(c(0.4,0.2),
+                                               c(0.2,0.2)),
+                             xlims = c(-0.8,0.8),
+                             ylims = c(-1,1))
+  
+})
+
+
+combined = wrap_plots(pl_list, nrow = 1)
+combined
+```
+
+
+
+Visualization of cell neighborhood glyphs with region information:
+```{r}
+string_list = c(
+  "TME_CD8+ T cell",
+  "TME_CD8+ T cell--Tumor_Tumor",
+  "TME_CD8+ T cell--TME_pDC--Tumor_Tumor"
+)
+
+adjmat_list = list('singlet',
+                   'pair',
+                   matrix(c(0,1,0,1,0,1,0,1,0),3,3))
+celltype_color_plate = c(
+  "CD8+ T cell" = 'black',
+  "Tumor"       = 'black',
+  "pDC"         = 'black'
+)
+
+region_color_plate = c(
+  "Tumor" = "#7295D1",   
+  "TME"   =  "#B0DDD3" 
+)
+pl_list = lapply(1:length(string_list),function(x){
+  
+  pl = cellNeighborhoodGlyph(string = string_list[x],
+                           adjmat = adjmat_list[[x]],
+                           celltype_color_plate = celltype_color_plate,
+                           region_color_plate = region_color_plate,
+                           node_text_size = 5, 
+                           node_scale = list(c(0.4,0.2),
+                                             c(0.2,0.2)),
+                           xlims = c(-0.8,0.8),
+                           ylims = c(0,4))
+  
+})
+
+
+combined = wrap_plots(pl_list, nrow = 1)
+combined
+```

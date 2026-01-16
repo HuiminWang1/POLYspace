@@ -12,6 +12,7 @@ Depends:
     R (>= 4.1.0)
 Imports: 
     combinat,
+    ggplot2,
     data.table,
     igraph,
     limma,
@@ -21,12 +22,15 @@ Imports:
     RCDT,
     reshape2,
     stats,
-    utils
+    utils,
+    stringr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    patchwork
 VignetteBuilder: knitr
 LazyData: true
+LazyDataCompression: xz

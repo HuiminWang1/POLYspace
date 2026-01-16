@@ -12,5 +12,7 @@ navbar:
       href: installation.html
     - text: "Experiments"
       href: experiments.html
+    - text: "Visualizations"
+      href: visualizations.html
     - text: "Reference"
       href: reference/index.html
