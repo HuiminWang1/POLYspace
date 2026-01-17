@@ -26,12 +26,19 @@ library(patchwork)
 
 ```
 
-Visualization of cell neighborhood glyphs without explicit region information:
+The following visualization takes neighborhood strings and their corresponding adjacency matrices as input. In this example, the glyphs are displayed as a list to illustrate different neighborhood topologies.
+
+First, examples without region information are presented.
 ```{r}
 string_list = c('CD8+ T cell','CD8+ T cell--Tumor','CD8+ T cell--pDC--Tumor')
 adjmat_list = list('singlet',
                    'pair',
                    matrix(c(0,1,0,1,0,1,0,1,0),3,3))
+
+```
+
+Arc visualization of cell neighborhood glyphs without explicit region information:
+```{r}
 celltype_color_plate = c(
   "CD8+ T cell" = 'black',
   "Tumor"       = 'black',
@@ -39,7 +46,7 @@ celltype_color_plate = c(
 )
 pl_list = lapply(1:length(string_list),function(x){
   
-  pl = cellNeighborhoodGlyph(string = string_list[x],
+  pl = neighborhoodArcGlyph(string = string_list[x],
                              adjmat = adjmat_list[[x]],
                              celltype_color_plate = celltype_color_plate,
                              node_scale = list(c(0.4,0.2),
@@ -55,13 +62,8 @@ combined
 ```
 
 
-
-With color:
+Arc visualization with colors for cell types:
 ```{r}
-string_list = c('CD8+ T cell','CD8+ T cell--Tumor','CD8+ T cell--pDC--Tumor')
-adjmat_list = list('singlet',
-                   'pair',
-                   matrix(c(0,1,0,1,0,1,0,1,0),3,3))
 celltype_color_plate = c(
   "CD8+ T cell" = "#F03C3C",
   "pDC"         = "#9F7FDB",
@@ -69,7 +71,7 @@ celltype_color_plate = c(
 )
 pl_list = lapply(1:length(string_list),function(x){
   
-  pl = cellNeighborhoodGlyph(string = string_list[x],
+  pl = neighborhoodArcGlyph(string = string_list[x],
                              adjmat = adjmat_list[[x]],
                              celltype_color_plate = celltype_color_plate,
                              node_scale = list(c(0.4,0.2),
@@ -85,8 +87,29 @@ combined
 ```
 
 
+Sector visualization with colors for cell types:
+```{r}
 
-Visualization of cell neighborhood glyphs with region information:
+pl_list = lapply(1:length(string_list),function(x){
+  
+  pl = neighborhoodSectorGlyph(string = string_list[x],
+                              region_color_plate = region_color_plate,
+                              celltype_color_plate = celltype_color_plate,
+                              adj_matrix = adjmat_list[[x]],
+                              region_alpha = 0.4,
+                              cell_size = 8,
+                              text = FALSE,
+                              text_size = 4)
+  
+})
+
+
+combined = wrap_plots(pl_list, nrow = 1)
+combined
+
+```
+
+Next, examples without region information are presented.
 ```{r}
 string_list = c(
   "TME_CD8+ T cell",
@@ -97,6 +120,10 @@ string_list = c(
 adjmat_list = list('singlet',
                    'pair',
                    matrix(c(0,1,0,1,0,1,0,1,0),3,3))
+```
+
+Arc visualization of cell neighborhood glyphs with region information:
+```{r}
 celltype_color_plate = c(
   "CD8+ T cell" = 'black',
   "Tumor"       = 'black',
@@ -109,7 +136,7 @@ region_color_plate = c(
 )
 pl_list = lapply(1:length(string_list),function(x){
   
-  pl = cellNeighborhoodGlyph(string = string_list[x],
+  pl = neighborhoodArcGlyph(string = string_list[x],
                            adjmat = adjmat_list[[x]],
                            celltype_color_plate = celltype_color_plate,
                            region_color_plate = region_color_plate,
@@ -124,4 +151,31 @@ pl_list = lapply(1:length(string_list),function(x){
 
 combined = wrap_plots(pl_list, nrow = 1)
 combined
+```
+
+
+Sector visualization of colored cell types with region information
+```{r}
+celltype_color_plate = c(
+  "CD8+ T cell" = "#F03C3C",
+  "pDC"         = "#9F7FDB",
+  "Tumor"       = "#5F6FD0"
+)
+pl_list = lapply(1:length(string_list),function(x){
+  
+  pl = neighborhoodSectorGlyph(string = string_list[x],
+                              region_color_plate = region_color_plate,
+                              celltype_color_plate = celltype_color_plate,
+                              adj_matrix = adjmat_list[[x]],
+                              region_alpha = 0.4,
+                              cell_size = 8,
+                              text = FALSE,
+                              text_size = 4)
+  
+})
+
+
+combined = wrap_plots(pl_list, nrow = 1)
+combined
+
 ```

@@ -305,7 +305,7 @@ generateNodePosition = function(node_data,
 #' rather than precise spatial coordinates.
 #'
 #' @export
-cellNeighborhoodGlyph = function(string,
+neighborhoodArcGlyph = function(string,
                                  adjmat,
                                  delimiter_node = '--',
                                  delimiter_region_celltype = '_',

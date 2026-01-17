@@ -13,6 +13,7 @@ Depends:
 Imports: 
     combinat,
     ggplot2,
+    ggforce,
     data.table,
     igraph,
     limma,
